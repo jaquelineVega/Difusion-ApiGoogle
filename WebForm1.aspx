@@ -64,10 +64,26 @@
         <!--CAJAS-->
         <div class="container text-center" style="margin-top:2%; margin-bottom:2%;">
           <div class="row">
+
             <div class="col">
                 <img src="img/database.svg"  alt="...">
                 <div class="card-body">
-                  <h5 class="card-title">Base de datos</h5>
+                  <form>
+                      <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label">
+                            Latitud
+                        </label>
+                        <input type="email" class="form-control" id="latitud" >
+                      </div>
+                      <div class="mb-3">
+                        <label for="exampleInputPassword1" class="form-label">
+                            Longitud
+                        </label>
+                       <input type="email" class="form-control" id="longitud">
+                      </div>
+                     
+                      <button type="submit" class="btn btn-success">Aceptar</button>
+                    </form>
                 </div>
             </div>
 
@@ -104,18 +120,38 @@
 
            var map;
            function initMap() {
+               var latitud = 22.145283;
+               var longitud = - 101.015192;
+
+               coordenadas = {
+                   lng: longitud,
+                   lat: latitud,
+               };
+               generarMapa(coordenadas);
+           }
+
+           function generarMapa(coordenadas){
+
+
                map = new google.maps.Map(document.getElementById('map'), {
-                   center: { lat: 22.145283, lng: - 101.015192 },
+                   center: new google.maps.LatLng(coordenadas.lat, coordenadas.lng),
                    zoom: 13,
                });
                var marker = new google.maps.Marker({
-                   position: { lat: 22.145283, lng: - 101.015192 },
+                   position: new google.maps.LatLng(coordenadas.lat,coordenadas.lng),
                    map: map,
                    title: 'Zona Universitaria'
                });
                var infowindow = new google.maps.InfoWindow({
                    content: "<p>Coordenadas:" + marker.getPosition() + "</p>",
                });
+
+               //EVENTO PARA TOMAR COORDENADAS AL ARRASTRARSE
+
+               marker.addListener('dragend', function (event) {
+                   document.getElementById("latitud").value = this.getPosition().lat();
+                   document.getElementById("longitud").value = this.getPosition().lng();
+               })
 
                // This event listener calls addMarker() when the map is clicked.
                google.maps.event.addListener(map, "click", (event) => {
